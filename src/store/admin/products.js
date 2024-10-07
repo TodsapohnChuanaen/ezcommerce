@@ -3,7 +3,8 @@ import { list } from 'postcss'
 
 export const useAdminProductStore = defineStore('product', {
     state: () => ({
-        list: []
+        list: [],
+        loaded: false
     }),
     actions: {
         // filterProducts(searchText) {
@@ -13,9 +14,13 @@ export const useAdminProductStore = defineStore('product', {
             const products = localStorage.getItem('admin-products')
             if(products) {
                 this.list = JSON.parse(products)
+                this.loaded = true
             }
         },
         getProducts(index) {
+            if (!this.loaded) {
+                this.loadProducts()
+            }
             return this.list[index]
         },
         addProduct(productData) {

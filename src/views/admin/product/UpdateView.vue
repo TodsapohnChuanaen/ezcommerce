@@ -1,7 +1,7 @@
 <template>
     <AdminLayout>
         <div class="shadow-3xl p-8 mt-4">
-            <div class="text-3xl font-bold">ADD</div>
+            <div class="text-3xl font-bold">{{ mode }}</div>
             <div class="divider"></div>
             <div class="grid grid-cols-2 gap-4">
                 <label v-for="form in formData" class="form-control w-full" v-bind:key="form.id">
@@ -30,20 +30,41 @@
         </div>
         <div class="flex mt-4 justify-end gap-2">
             <button class="btn btn-ghost">Back</button>
-            <button class="btn btn-neutral" @click="addProduct()">Add</button>
+            <button class="btn btn-neutral" @click="updateProduct()">{{ mode }}</button>
         </div>
         </div>
     </AdminLayout>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, onMounted, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import {useAdminProductStore} from '@/store/admin/products'
 
 const adminProductStore = useAdminProductStore()
 const router = useRouter()
+const route = useRoute()
+
+const productIndex = ref(-1)
+const mode = ref('add')
+
+onMounted(() => {
+    if(route.params.id){
+        productIndex.value = parseInt(route.params.id)
+        mode.value = 'edit'
+
+        const selectedProduct = adminProductStore.getProducts(productIndex.value)
+        // console.log('selectedproduct',selectedProduct)
+
+        productData.name = selectedProduct.name
+        productData.image = selectedProduct.image
+        productData.price = selectedProduct.price
+        productData.quantity = selectedProduct.quantity
+        productData.about = selectedProduct.about
+        productData.status = selectedProduct.status
+    }
+})
 
 const formData = [
     {
@@ -77,9 +98,14 @@ const productData = reactive({
     status:''
 })
 
-const addProduct = () => {
+const updateProduct = () => {
+    if(mode.value === 'edit'){
+        adminProductStore.updateProduct(productIndex.value, productData)
+    }else{
+        adminProductStore.addProduct(productData)
+    }
     // console.log(productData)
-    adminProductStore.addProduct(productData)
+    
     router.push({name: 'admin-products-list'})
 }
 </script>
