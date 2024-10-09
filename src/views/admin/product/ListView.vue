@@ -41,12 +41,15 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { onMounted } from 'vue'
+
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminProductStore } from '@/store/admin/products'
+
 import Trash from '@/components/icons/Trash.vue'
 import Edit from '@/components/icons/Edit.vue'
 import Table from '@/components/Table.vue'
-import { onMounted } from 'vue'
+
 
 const adminProductStore = useAdminProductStore()
 onMounted(() => {
