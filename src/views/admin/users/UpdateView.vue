@@ -8,9 +8,13 @@
                     <div class="label">
                         <span class="label-text">{{ form.name }}</span>
                     </div>
-                    <input v-if="form.type === 'text'" type="text" placeholder="Type here"
+                    <input v-if="form.type === 'text'" 
+                    v-model="userData[form.field]"
+                    type="text" placeholder="Type here"
                         class="input input-bordered w-1/2" />
-                    <select v-if="form.type === 'select'" type="select" class="select select-bordered w-1/4">
+                    <select v-if="form.type === 'select'" 
+                    v-model="userData[form.field]"
+                    type="select" class="select select-bordered w-1/4">
                         <option v-for="option in form.dropdownList" v-bind:key="option">
                             {{ option }}
                         </option>
@@ -18,7 +22,7 @@
                 </label>
             </div>
             <div class="flex mt-4 justify-end gap-2">
-                <button class="btn btn-ghost">Back</button>
+                <RouterLink :to="{ name: 'admin-users-list'}" class="btn btn-ghost">back</RouterLink>
                 <button class="btn btn-neutral" @click="updateUser()">Update</button>
             </div>
         </div>
@@ -26,16 +30,42 @@
 </template>
 
 <script setup>
+import { ref,reactive,onMounted } from 'vue';
+import { useRoute,useRouter,RouterLink } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import { useAdminUserStore } from '@/store/admin/users';
+
+const adminUserStore = useAdminUserStore()
+const route = useRoute()
+const userIndex = ref(-1)
+const router = useRouter()
+
+onMounted(() => {
+    if(route.params.id){
+        userIndex.value = parseInt(route.params.id)
+        const selectedUser = adminUserStore.getUsers(userIndex.value)
+
+        userData.adminName = selectedUser.adminName
+        userData.role = selectedUser.role
+        userData.status = selectedUser.status   
+    }
+})
+
+const userData = reactive({
+    adminName: '',
+    role: '',
+    status: '' 
+})
 
 const updateUser = () => {
-
+    adminUserStore.updateUser(userIndex.value, userData)
+    router.push({name: 'admin-users-list'})
 }
 
 const formData = [
     {
         name: 'Name',
-        field: 'name',
+        field: 'adminName',
         type: 'text'
     },
     {

@@ -29,7 +29,7 @@
             </label>
         </div>
         <div class="flex mt-4 justify-end gap-2">
-            <button class="btn btn-ghost">Back</button>
+            <RouterLink :to="{ name: 'admin-products-list'}" class="btn btn-ghost">back</RouterLink>
             <button class="btn btn-neutral" @click="updateProduct()">{{ mode }}</button>
         </div>
         </div>

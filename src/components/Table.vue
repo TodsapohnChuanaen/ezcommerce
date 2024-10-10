@@ -5,7 +5,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th v-for="header in headers" v-bind:key="header">{{ header }}</th>
+                <th v-for="header in headers" v-bind:key="header" class="font-bold text-lg text-white">{{ header }}</th>
             </tr>
         </thead>
         <tbody>

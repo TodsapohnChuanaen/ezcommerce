@@ -16,8 +16,8 @@ export const useAdminUserStore = defineStore('admin-user', {
         updateUser(index, userData){
             const fields = ['adminName', 'role', 'status']
             //or fields.forEach(field => {}}
-            for (fields of fields) {
-                this.list[index][fields] = userData[fields]
+            for (let field of fields) {
+                this.list[index][field] = userData[field]
             }
             this.list[index].updatedAt = (new Date()).toISOString()
         },

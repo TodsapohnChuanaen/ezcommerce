@@ -18,7 +18,7 @@
                 <td>{{ product.remainQuantity }} / {{ product.quantity }}</td>
                 <td>
                     <div class="badge"
-                        :class="product.status === 'open' ? 'badge-success font-bold' : 'badge-error font-bold'">
+                        :class="product.status === 'open' ? 'badge-success' : 'badge-error'">
                         {{ product.status }}
                     </div>
                 </td>
