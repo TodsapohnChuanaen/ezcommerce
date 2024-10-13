@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { list } from 'postcss'
 
-export const useAdminOrdertStore = defineStore('admin-order', {
+export const useAdminOrderStore = defineStore('admin-order', {
     state: () => ({
         list: [
             {
@@ -26,7 +26,35 @@ export const useAdminOrdertStore = defineStore('admin-order', {
                   quantity: 1,
                   price: '12,000'
                 }]
+              },
+              {
+                no: 'A112235',
+                customerName: 'abc',
+                totalPrice: '3,000',
+                status: 'Payment Completed',
+                address: '222/892 Nonthaburi Thailand 8888',
+                paymentMethod: 'Credit card',
+                updatedAt: '9/20/2023, 11:40:24 PM',
+                products: [{
+                  name: 'ทดสอบ abc',
+                  description: 'รายละเอียดสินค้า 1',
+                  imageUrl: 'https://fastly.picsum.photos/id/928/200/200.jpg?hmac=5MQxbf-ANcu87ZaOn5sOEObpZ9PpJfrOImdC7yOkBlg',
+                  quantity: 1,
+                  price: '23,000'
+                },
+                {
+                  name: 'ทดสอบ abc 2',
+                  description: 'รายละเอียดสินค้า 2',
+                  imageUrl: 'https://fastly.picsum.photos/id/59/200/200.jpg?hmac=q9DbuoFh1L_NWnGk3AGdzuEOlg5bBW4JmBSgWmQdT74',
+                  quantity: 1,
+                  price: '32,000'
+                }]
               }
         ],
     }),  
+    actios: {
+      getOrder(index) {
+        return this.list[index]
+      }
+    }
 })

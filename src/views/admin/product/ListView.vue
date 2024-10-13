@@ -24,7 +24,7 @@
                 </td>
                 <td>{{ product.updatedAt }}</td>
                 <td>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2"> 
                         <RouterLink :to="{ name: 'admin-products-update', params: { id: index } }"
                             class="btn btn-ghost btn-circle">
                             <Edit></Edit>

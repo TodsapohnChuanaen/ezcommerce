@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-import {defineProps} from 'vue'
 
 defineProps({
     // รับ products มาจาก HomeView.vue เพื่อนำมาวน loop ใน template
