@@ -12,7 +12,8 @@ export const useAdminOrderStore = defineStore('admin-order', {
                 address: '111/892 Nonthaburi Thailand 99999',
                 paymentMethod: 'Credit card',
                 updatedAt: '9/15/2023, 11:50:24 PM',
-                products: [{
+                products: [
+                  {
                   name: 'ทดสอบ',
                   description: 'รายละเอียดสินค้า 1',
                   imageUrl: 'https://fastly.picsum.photos/id/928/200/200.jpg?hmac=5MQxbf-ANcu87ZaOn5sOEObpZ9PpJfrOImdC7yOkBlg',
@@ -52,9 +53,9 @@ export const useAdminOrderStore = defineStore('admin-order', {
               }
         ],
     }),  
-    actios: {
-      getOrder(index) {
-        return this.list[index]
-      }
+    actions: {
+        getOrder(index){
+          return this.list[index]
+        }
     }
 })

@@ -46,7 +46,7 @@ const adminProductStore = useAdminProductStore()
 const router = useRouter()
 const route = useRoute()
 
-const productIndex = ref(-1)
+const productIndex = ref()
 const mode = ref('add')
 
 onMounted(() => {
