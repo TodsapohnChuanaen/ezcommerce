@@ -8,11 +8,11 @@
             </div>
         </div>
         <Table
-            :headers="['Name', 'Image', 'Price', 'Quantity', 'Status', 'Updated At', 'Action']">   
+            :headers="['Name', 'Image', 'Price', 'Quantity', 'Status', 'Updated At']">   
             <tr v-for="(product, index) in adminProductStore.list" v-bind:key="product.id">
                 <th>{{ product.name }}</th>
                 <td>
-                    <img :src="product.image">
+                    <img :src="product.imageUrl">
                 </td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.remainQuantity }} / {{ product.quantity }}</td>

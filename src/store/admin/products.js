@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { list } from 'postcss'
 
-export const useAdminProductStore = defineStore('product', {
+export const useAdminProductStore = defineStore('product-admin', {
     state: () => ({
         list: [],
         loaded: false
@@ -32,7 +32,7 @@ export const useAdminProductStore = defineStore('product', {
         updateProduct(index, productData) {
             //long version
             this.list[index].name = productData.name
-            this.list[index].image = productData.image
+            this.list[index].imageUrl = productData.imageUrl
             this.list[index].price = productData.price
             this.list[index].quantity = productData.quantity
             this.list[index].remainQuantity = productData.quantity

@@ -1,26 +1,20 @@
 import { defineStore } from 'pinia'
 
-export const useProductStore = defineStore('product', {
+export const useProductStore = defineStore('product-users', {
   state: () => ({
-    list: [{
-      name: 'test',
-      imageUrl: 'https://fastly.picsum.photos/id/237/536/354.jpg?hmac=i0yVXW1ORpyCZpQ-CknuyV-jbtU7_x9EBQVhvT5aRr0',
-      quantity: 10,
-      about: 'testt',
-      status: 'open',
-      price: 100,
-    },{
-    name: 'test 123',
-    imageUrl: 'https://fastly.picsum.photos/id/685/536/354.jpg?hmac=Hd6dp2Be-rOnk4Iqn2P0JT4dbWx6ZwdihOS9q9KbXvs',
-    quantity: 20,
-    about: 'recheck this',
-    status: 'open',
-    price: 100}]
-    // loaded: false
+    list: []
   }),
   actions:{
     filterProducts(searchText){
       return this.list.filter(product =>product.name.includes(searchText))
-    }
+    },
+
+    loadProducts() {
+      const products = localStorage.getItem('admin-products')
+      if(products) {
+          this.list = JSON.parse(products)
+          this.loaded = true
+      }
+  }
   }
 })

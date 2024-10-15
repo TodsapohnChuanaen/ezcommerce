@@ -34,11 +34,13 @@ import { ref,reactive,onMounted } from 'vue';
 import { useRoute,useRouter,RouterLink } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminUserStore } from '@/store/admin/users';
+import {useEventStore} from '@/store/event'
 
 const adminUserStore = useAdminUserStore()
 const route = useRoute()
 const userIndex = ref(-1)
 const router = useRouter()
+const eventStore = useEventStore()
 
 onMounted(() => {
     if(route.params.id){
@@ -59,6 +61,7 @@ const userData = reactive({
 
 const updateUser = () => {
     adminUserStore.updateUser(userIndex.value, userData)
+    eventStore.popupMessage('info','update user success')
     router.push({name: 'admin-users-list'})
 }
 

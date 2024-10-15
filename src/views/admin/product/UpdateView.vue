@@ -8,39 +8,39 @@
                     <div class="label">
                         <span class="label-text">{{ form.name }}</span>
                     </div>
-                    <input 
-                    type="text" 
-                    placeholder="Type here" 
-                    class="input input-bordered w-full"
-                    v-model="productData[form.field]" />
+                    <input type="text" placeholder="Type here" class="input input-bordered w-full"
+                        v-model="productData[form.field]" />
                 </label>
             </div>
             <div class="divider"></div>
             <div class="grid grid-cols-2 gap-4">
-            <label class="form-control w-full ">
-                <div class="label">
-                    <span class="label-text">Status</span>
-                </div>
-                <select v-model="productData.status" class="select select-bordered">
-                    <option disabled selected>Status</option>
-                    <option value="open">Open</option>
-                    <option value="closed">Close</option>
-                </select>
-            </label>
-        </div>
-        <div class="flex mt-4 justify-end gap-2">
-            <RouterLink :to="{ name: 'admin-products-list'}" class="btn btn-ghost">back</RouterLink>
-            <button class="btn btn-neutral" @click="updateProduct()">{{ mode }}</button>
-        </div>
+                <label class="form-control w-full ">
+                    <div class="label">
+                        <span class="label-text">Status</span>
+                    </div>
+                    <select v-model="productData.status" class="select select-bordered">
+                        <option disabled selected>Status</option>
+                        <option value="open">Open</option>
+                        <option value="closed">Close</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="flex mt-4 justify-end gap-2">
+                <RouterLink 
+                :to="{ name: 'admin-products-list' }" 
+                class="btn btn-ghost">BACK</RouterLink>
+                <button class="btn btn-neutral" @click="updateProduct()">{{ mode }}</button>
+            </div>
         </div>
     </AdminLayout>
 </template>
 
 <script setup>
 import { reactive, onMounted, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, RouterLink } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import {useAdminProductStore} from '@/store/admin/products'
+import { useAdminProductStore } from '@/store/admin/products'
 
 const adminProductStore = useAdminProductStore()
 const router = useRouter()
@@ -50,7 +50,7 @@ const productIndex = ref()
 const mode = ref('add')
 
 onMounted(() => {
-    if(route.params.id){
+    if (route.params.id) {
         productIndex.value = parseInt(route.params.id)
         mode.value = 'edit'
 
@@ -58,7 +58,7 @@ onMounted(() => {
         // console.log('selectedproduct',selectedProduct)
 
         productData.name = selectedProduct.name
-        productData.image = selectedProduct.image
+        productData.imageUrl = selectedProduct.imageUrl
         productData.price = selectedProduct.price
         productData.quantity = selectedProduct.quantity
         productData.about = selectedProduct.about
@@ -73,7 +73,7 @@ const formData = [
     },
     {
         name: 'Image',
-        field: 'image',
+        field: 'imageUrl',
     },
     {
         name: 'Price',
@@ -91,21 +91,21 @@ const formData = [
 
 const productData = reactive({
     name: '',
-    image: '',
+    imageUrl: '',
     price: 0,
     quantity: 0,
     about: '',
-    status:''
+    status: ''
 })
 
 const updateProduct = () => {
-    if(mode.value === 'edit'){
+    if (mode.value === 'edit') {
         adminProductStore.updateProduct(productIndex.value, productData)
-    }else{
+    } else {
         adminProductStore.addProduct(productData)
     }
     // console.log(productData)
-    
-    router.push({name: 'admin-products-list'})
+
+    router.push({ name: 'admin-products-list' })
 }
 </script>

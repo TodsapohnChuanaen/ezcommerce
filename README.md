@@ -34,3 +34,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### thing that need to see if has a bug or eror
+```sh
+export const useProductStore = defineStore('product-users', {} 
+'product-users' avoid duplicate names in defineStore to ensure clear and maintainable code.
+```
