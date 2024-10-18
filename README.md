@@ -22,6 +22,25 @@ npm i -D daisyui@latest
 npm install --save apexcharts
 npm install --save vue3-apexcharts  
 ```
+### Install firebase for backend
+```sh
+npm install -g firebase-tools   (install firebase cli for using firebase command) and firebase --version for check if cli is installed.
+firebase login
+    go to firebase console and create firestore database and create Storage  
+firebase init
+    (choose realtime database,firestore,functions,hosting:config,storage,emulators)
+    Emulator Setup
+    (choose authentication,functions,firestore,database,storage)
+How to use firebase emulator(can skip it if don't worry about firebase pricing)
+    firebase emulators:start
+    or use this command to remember setting by import and export setting
+    this command will create new folder call firebase-export in this project >>
+    firebase emulators:start --import ./firebase-export --export-on-exit ./firebase-export
+npm install firebase
+
+create file firebase.js in src folder for firebase config.
+by go to project Overview and choose add app
+```
 
 ### Compile and Hot-Reload for Development
 
@@ -35,8 +54,15 @@ npm run dev
 npm run build
 ```
 
-### thing that need to see if has a bug or eror
+### Things to look out for when encountering bugs and errors.
 ```sh
 export const useProductStore = defineStore('product-users', {} 
 'product-users' avoid duplicate names in defineStore to ensure clear and maintainable code.
+```
+
+### P.S.
+```sh
+Can use specific Node.js version to prevent warning. So use node v20.18.0 (npm v10.8.2) with command nvm i 20.18.0 for install and nvm use 20.18.0 --save 
+>>[DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+or follow https://www.npmjs.com/package/punycode
 ```
