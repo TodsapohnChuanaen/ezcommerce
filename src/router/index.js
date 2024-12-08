@@ -18,6 +18,9 @@ import AdminUsersUpdate from '@/views/admin/users/UpdateView.vue'
 import AdminOrderList from '@/views/admin/order/ListView.vue'
 import AdminOrderDetail from '@/views/admin/order/DetailView.vue'
 
+import {useAccountStore} from '@/store/account'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -98,6 +101,17 @@ const router = createRouter({
       component: AdminOrderDetail
     }
   ]
+})
+
+//beforeEach ทำอะไรก่อนที่จะไปยัง router ต่อไป
+//โดยในที่นี้จะทำการ check auth ก่อนที่ไปยัง router
+//afterEach ทำอะไรหลังจากไปยัง router
+router.beforeEach(async(to, from, next) => {
+  // console.log('to',to)
+  // console.log('from',from)
+  const accountStore = useAccountStore()
+  await accountStore.checkAuth()
+  next()
 })
 
 export default router

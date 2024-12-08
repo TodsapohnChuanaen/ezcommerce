@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <button @click="login" v-if="!isLoggedIn" class="btn btn-ghost">
+                <button @click="login" v-if="!accountStore.isLoggedIn" class="btn btn-ghost">
                     Login
                 </button>
                 <!-- profile -->
@@ -74,21 +74,31 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import {RouterLink,useRouter} from 'vue-router'
+
 import {useCartStore} from '@/store/users/cart'
+import {useAccountStore} from '@/store/account'
+
 
 const cartStore = useCartStore()
+const accountStore = useAccountStore()
 
 const router = useRouter()
 
-const isLoggedIn = ref(false)
+//for local test
+// const isLoggedIn = ref(false)
+
 const searchText = ref('')
 
+// onMounted(async() => {
+//     await accountStore.checkAuth()
+// })
 
-onMounted(() =>{
-    if(localStorage.getItem('isLoggedIn')){
-        isLoggedIn.value = true
-    }
-})
+//for local test
+// onMounted(() =>{
+//     if(localStorage.getItem('isLoggedIn')){
+//         isLoggedIn.value = true
+//     }
+// })
 
 const handleSearch= (event) =>{
     // console.log(event.key)
@@ -102,16 +112,30 @@ const handleSearch= (event) =>{
     }
 }
 
-const login = () =>{
-    isLoggedIn.value = true
-    localStorage.setItem('isLoggedIn', true)
+const login = async () =>{
+    //for local test
+    // isLoggedIn.value = true
+    // localStorage.setItem('isLoggedIn', true)
+    
+    try{
+        await accountStore.signInWithGoogle()
+    }catch(error){
+        console.log('error',error)
+    }
 }
-
-const logout = () =>{
-    isLoggedIn.value = false
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('cart-data')
-    localStorage.removeItem('order-data')
-    window.location.reload() //just refresh page
+const logout = async () =>{
+    //for local test
+    // isLoggedIn.value = false
+    // localStorage.removeItem('isLoggedIn')
+    // localStorage.removeItem('cart-data')
+    // localStorage.removeItem('order-data')
+    
+    try{
+        await accountStore.signOut()
+        window.location.reload() //just refresh page
+    }catch(error){
+        console.log('error',error)
+    }
+    
 }
 </script>

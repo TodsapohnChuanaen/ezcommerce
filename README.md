@@ -35,6 +35,7 @@ How to use firebase emulator(can skip it if don't worry about firebase pricing)
     firebase emulators:start
     or use this command to remember setting by import and export setting
     this command will create new folder call firebase-export in this project >>
+    
     firebase emulators:start --import ./firebase-export --export-on-exit ./firebase-export
 npm install firebase
 
