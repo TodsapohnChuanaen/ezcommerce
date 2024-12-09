@@ -57,7 +57,7 @@ const router = createRouter({
     // for admin side
     {
       path: '/admin/login',
-      name: 'admin-login',
+      name: 'login',
       component: AdminLogin
     },
     {
@@ -111,7 +111,17 @@ router.beforeEach(async(to, from, next) => {
   // console.log('from',from)
   const accountStore = useAccountStore()
   await accountStore.checkAuth()
-  next()
+
+  //guard navigation
+  //check if user is admin and if not redirect to home
+  if(to.name.includes('admin') && !accountStore.isAdmin){
+    next({name: 'home'})
+  }else if(to.name == 'login' && accountStore.isAdmin){
+    next({name: 'admin-dashboard'})
+  }
+  else{
+    next()
+  } 
 })
 
 export default router

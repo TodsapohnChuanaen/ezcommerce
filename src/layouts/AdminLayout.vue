@@ -12,11 +12,13 @@
                     <RouterLink :to="{ name: 'admin-dashboard' }">EasyCommerce BackOffice</RouterLink>
                 </li>
                 <li class="mb-1" v-for="menu in menus" :key="menu.name">
-                    <RouterLink class="text-xl"
-                    :to="{ name: menu.routeName }"
-                    :class="menu.routeName === activeMenu ? 'active' : ''">
-                    {{menu.name}}
-                </RouterLink>
+                    <RouterLink class="text-xl" :to="{ name: menu.routeName }"
+                        :class="menu.routeName === activeMenu ? 'active' : ''">
+                        {{ menu.name }}
+                    </RouterLink>
+                </li>
+                <li>
+                   <a class="text-xl" @click="logout">Logout</a>
                 </li>
             </ul>
         </div>
@@ -24,9 +26,12 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue'
-import { RouterLink,useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useAccountStore } from '@/store/account'
 
+const accountStore = useAccountStore()
+const router = useRouter()
 const activeMenu = ref('')
 const route = useRoute()
 
@@ -42,21 +47,27 @@ const menus = [
         routeName: 'admin-dashboard'
     },
     {
-        name: 'users',
+        name: 'Users',
         routeName: 'admin-users-list'
     },
     {
-        name: 'product',
+        name: 'Product',
         routeName: 'admin-products-list'
     },
     {
-        name: 'order',
+        name: 'Order',
         routeName: 'admin-orders-list'
-    },
-    {
-        name: 'logout',
-        routeName: 'admin-login'
     }
 ]
+
+const logout = async () => {
+    try{
+        await accountStore.signOut()
+        router.push({ name: 'login' })
+    }catch(error){
+        console.log('error',error)
+    }
+   
+}
 
 </script>

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 
+//for toast message
 export const useEventStore = defineStore("event", {
   state: () => ({
       alert: false,
