@@ -5,7 +5,7 @@
         </div>
         <Table :headers="['Name', 'Role', 'Status', 'Updated At', 'Action']">
             <tr v-for="(user,index) in adminUserStore.list" v-bind:key="user.id">
-                <td class=" text-white font-bold">{{ user.adminName }}</td>
+                <td class=" text-white font-bold">{{ user.fullname }}</td>
                 <td>{{ user.role}}</td>
                 <td><div class="badge"
                         :class="user.status === 'active' ? 'badge-success' : 'badge-error'">
@@ -15,7 +15,7 @@
                 <td>{{ user.updatedAt }}</td>
                 <td>
                     <div class="flex gap-2">
-                    <RouterLink :to="{ name: 'admin-users-update', params: { id: index } }" 
+                    <RouterLink :to="{ name: 'admin-users-update', params: { id: user.uid } }" 
                     class="btn btn-ghost btn-circle">
                         <Edit></Edit>
                     </RouterLink>
@@ -45,6 +45,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
@@ -57,13 +58,17 @@ import { useAdminUserStore } from '@/store/admin/users'
 
 // const isActive = ref(false)
 
+onMounted( async () => {
+    await adminUserStore.loadUsers()
+})
+
 const adminUserStore = useAdminUserStore()
 // onMounted(() => {
 //     useAdminUserStore.loadUsers()
 // })
-const changeStatus = (index) => {
+const changeStatus = async (index) => {
     let selectUser = adminUserStore.list[index]
     selectUser.status = selectUser.status === 'active' ? 'disable' : 'active'
-    adminUserStore.updateUser(selectUser)
+    await adminUserStore.updateUser(selectUser.uid, selectUser)
 }
 </script>

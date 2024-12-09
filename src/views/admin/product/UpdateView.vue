@@ -27,9 +27,7 @@
             </div>
 
             <div class="flex mt-4 justify-end gap-2">
-                <RouterLink 
-                :to="{ name: 'admin-products-list' }" 
-                class="btn btn-ghost">BACK</RouterLink>
+                <RouterLink :to="{ name: 'admin-products-list' }" class="btn btn-ghost">BACK</RouterLink>
                 <button class="btn btn-neutral" @click="updateProduct()">{{ mode }}</button>
             </div>
         </div>
@@ -49,13 +47,12 @@ const route = useRoute()
 const productIndex = ref()
 const mode = ref('add')
 
-onMounted(() => {
+onMounted(async () => {
     if (route.params.id) {
-        productIndex.value = parseInt(route.params.id)
+        productIndex.value = route.params.id
         mode.value = 'edit'
 
-        const selectedProduct = adminProductStore.getProducts(productIndex.value)
-        // console.log('selectedproduct',selectedProduct)
+        const selectedProduct = await adminProductStore.getProduct(productIndex.value)
 
         productData.name = selectedProduct.name
         productData.imageUrl = selectedProduct.imageUrl
@@ -98,14 +95,16 @@ const productData = reactive({
     status: ''
 })
 
-const updateProduct = () => {
-    if (mode.value === 'edit') {
-        adminProductStore.updateProduct(productIndex.value, productData)
-    } else {
-        adminProductStore.addProduct(productData)
+const updateProduct = async () => {
+    try {
+        if (mode.value === 'edit') {
+            await adminProductStore.updateProduct(productIndex.value, productData)
+        } else {
+            await adminProductStore.addProduct(productData)
+        }
+        router.push({ name: 'admin-products-list' })
+    } catch (error) {
+        console.log('error', error)
     }
-    // console.log(productData)
-
-    router.push({ name: 'admin-products-list' })
 }
 </script>

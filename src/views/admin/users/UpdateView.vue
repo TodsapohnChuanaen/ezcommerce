@@ -42,33 +42,33 @@ const userIndex = ref(-1)
 const router = useRouter()
 const eventStore = useEventStore()
 
-onMounted(() => {
+onMounted(async() => {
     if(route.params.id){
-        userIndex.value = parseInt(route.params.id)
-        const selectedUser = adminUserStore.getUsers(userIndex.value)
+        userIndex.value = route.params.id
+        const selectedUser = await adminUserStore.getUser(userIndex.value)
 
-        userData.adminName = selectedUser.adminName
+        userData.fullname = selectedUser.fullname
         userData.role = selectedUser.role
         userData.status = selectedUser.status   
     }
 })
 
 const userData = reactive({
-    adminName: '',
+    fullname: '',
     role: '',
     status: '' 
 })
 
-const updateUser = () => {
-    adminUserStore.updateUser(userIndex.value, userData)
+const updateUser = async () => {
+    await adminUserStore.updateUser(userIndex.value, userData)
     eventStore.popupMessage('info','update user success')
     router.push({name: 'admin-users-list'})
 }
 
 const formData = [
     {
-        name: 'Name',
-        field: 'adminName',
+        name: 'Fullname',
+        field: 'fullname',
         type: 'text'
     },
     {

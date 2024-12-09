@@ -25,11 +25,11 @@
                 <td>{{ product.updatedAt }}</td>
                 <td>
                     <div class="flex gap-2"> 
-                        <RouterLink :to="{ name: 'admin-products-update', params: { id: index } }"
+                        <RouterLink :to="{ name: 'admin-products-update', params: { id: product.productId } }"
                             class="btn btn-ghost btn-circle">
                             <Edit></Edit>
                         </RouterLink>
-                        <div @click="removeProduct(index)" class="btn btn-ghost btn-circle">
+                        <div @click="removeProduct(product.productId)" class="btn btn-ghost btn-circle">
                             <Trash></Trash>
                         </div>
                     </div>
@@ -52,12 +52,17 @@ import Table from '@/components/Table.vue'
 
 
 const adminProductStore = useAdminProductStore()
-onMounted(() => {
-    adminProductStore.loadProducts()
+onMounted(async() => {
+    await adminProductStore.loadProducts()
 })
 
-const removeProduct = (index) => {
-    adminProductStore.removeProduct(index)
+const removeProduct = async(index) => {
+    try{
+        await adminProductStore.removeProduct(index)
+        await adminProductStore.loadProducts()
+    }catch(error){
+        console.log('error', error)
+    }
 }
 
 </script>

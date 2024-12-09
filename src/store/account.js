@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 
 import {GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebase';
+import { auth, db } from '@/firebase';
+//getDoc ใช้สําหรับดึงข้อมูลอันเดียว getDocs ดึงข้อมูลทั้งหมด
+import {doc,getDoc,setDoc} from 'firebase/firestore'
 
 const provider = new GoogleAuthProvider();
 
@@ -9,22 +11,48 @@ export const useAccountStore = defineStore('account', {
     state: () => ({
         isLoggedIn: false,
         isAdmin: false,
-        user: {}
+        user: {},
+        profile:{}
     }),
     actions: {
         async checkAuth() {
             return new Promise((resolve) =>{
-                onAuthStateChanged(auth, (user) => {
+                onAuthStateChanged(auth, async (user) => {
                     // console.log('user',user)
                     if (user) {
+                        this.user = user
                         const uid = user.uid
 
+                        const docRef = doc(db, "users", uid);
+                        const docSnap = await getDoc(docRef);
+
+                        if (docSnap.exists()) {
+                            this.profile = docSnap.data()
+                        }else{
+                            const newUser = {
+                                fullname: user.displayName,
+                                role: 'member',
+                                status: 'active',
+                                updatedAt: new Date(),
+                            }
+                            await setDoc(docRef, newUser)
+                            this.profile = newUser
+                        }
+
                         //for testing purpose
-                        if(user.email == 'admin@test.com'){
+                        // if(user.email == 'admin@test.com'){
+                        //     this.isAdmin = true
+                        // }
+
+                        // console.log('profile',this.profile)
+                        if(this.profile.role == 'admin' ||
+                            this.profile.role == 'moderator'
+
+                        ){
                             this.isAdmin = true
                         }
 
-                        this.user = user
+                        //สำหรับสร้าง user = สร้าง data เข้า collection user ทันที
                         this.isLoggedIn = true
                         resolve(true)
                     }else{
