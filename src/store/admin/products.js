@@ -1,23 +1,90 @@
 import { defineStore } from 'pinia'
 import { db } from '@/firebase'
-import { collection, doc, getDoc, getDocs, addDoc, setDoc, deleteDoc } from 'firebase/firestore'
+import {
+    collection, doc, getDoc, getDocs, addDoc,
+    setDoc, deleteDoc, query, where, orderBy, limit, limitToLast,
+    startAfter,endBefore,getCountFromServer
+} from 'firebase/firestore'
 
 export const useAdminProductStore = defineStore('product-admin', {
     state: () => ({
         list: [],
-        loaded: false
+        docList: [],
+        total: 1,
+        filter: {
+            search: '',
+            status: 'all', //for default tab  
+            sort: {
+                updatedAt: 'desc',
+            }
+        }
     }),
-    actions: {
-        async loadProducts() {
-            const productCol = collection(db, "products")
-            const productSnapshot = await getDocs(productCol)
-            const products = productSnapshot.docs.map(doc => {
+    getters: {
+        list(state) {
+            return state.docList.map(doc =>{
                 const convertedProduct = doc.data()
                 convertedProduct.productId = doc.id
                 convertedProduct.updatedAt = convertedProduct.updatedAt.toDate()
                 return convertedProduct
             })
-            this.list = products
+        },
+        totalPage(state) {
+            //จำนวนข้อมูล หารด้วยจำนวนที่มีต่อหน้า (ในที่นี้เราต้องการแสดง  2 ข้อมูลต่อหน้า)
+            //Math.ceil คือการปัดเศษขึ้น
+            return Math.ceil(state.total / 2)
+        }
+    },
+    actions: {
+        async loadProducts() {
+            let productCol = query(collection(db, "products"),
+                orderBy('updatedAt', this.filter.sort.updatedAt)) //desc
+
+            if (this.filter.search) {
+                productCol = query(productCol, where("name", "==", this.filter.search))
+            }
+
+            if (this.filter.status) {
+                productCol = query(productCol, where("status", "==", this.filter.status))
+            }
+            if (this.filter.status === 'all') {  //for default tab  
+                productCol = query(collection(db, "products"),
+                    orderBy('updatedAt', this.filter.sort.updatedAt)) //desc
+            }
+
+            const rawProductCol = productCol
+
+            productCol = query(productCol, limit(2))
+
+            const productSnapshot = await getDocs(productCol)
+            this.docList = productSnapshot.docs
+
+            const allProductSnapshot = await getCountFromServer(rawProductCol)
+            this.total = allProductSnapshot.data().count
+        },
+        async loadNextProduct(mode) {
+            let productCol = query(collection(db, "products"),
+                orderBy('updatedAt', this.filter.sort.updatedAt))
+            if (mode === 'next') {
+                //select last document
+                const lastDocument = this.docList[this.docList.length - 1]
+                //next page
+                productCol = query(
+                    productCol,
+                    startAfter(lastDocument),
+                    limit(2)
+                )
+
+            } else {
+                //previous page
+                const firstDocument = this.docList[0]
+                productCol = query(
+                    productCol,
+                    endBefore(firstDocument),
+                    limitToLast(2)
+                )
+            }
+            const productSnapshot = await getDocs(productCol)
+            this.docList = productSnapshot.docs
         },
         async getProduct(productId) {
             try {

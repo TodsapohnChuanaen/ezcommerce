@@ -67,3 +67,10 @@ Can use specific Node.js version to prevent warning. So use node v20.18.0 (npm v
 >>[DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
 or follow https://www.npmjs.com/package/punycode
 ```
+
+### BUG
+```sh
+still have bug about pagination in  http://localhost:5173/admin/products
+need to look at store-admin-products
+and views-admin-product  ,  component-Pagination.vue
+```

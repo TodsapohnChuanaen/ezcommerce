@@ -88,6 +88,6 @@ const userFormData = reactive({
 const payment = () => {
     // console.log(userFormData)
     cartStore.placeOrder(userFormData)
-    router.push({name: 'SuccessView'})
+    // router.push({name: 'SuccessView'})
 }
 </script>
