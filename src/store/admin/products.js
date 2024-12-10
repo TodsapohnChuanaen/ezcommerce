@@ -8,7 +8,7 @@ import {
 
 export const useAdminProductStore = defineStore('product-admin', {
     state: () => ({
-        list: [],
+        lists: [],
         docList: [],
         total: 1,
         filter: {
@@ -19,11 +19,24 @@ export const useAdminProductStore = defineStore('product-admin', {
             }
         }
     }),
+
     getters: {
         list(state) {
-            return state.docList.map(doc =>{
+            return state.docList.map(doc => {
+                if (!doc) {
+                    throw new Error('doc is null or undefined')
+                }
+
                 const convertedProduct = doc.data()
+                if (!convertedProduct) {
+                    throw new Error('convertedProduct is null or undefined')
+                }
+
                 convertedProduct.productId = doc.id
+                if (!convertedProduct.updatedAt) {
+                    throw new Error('updatedAt is null or undefined')
+                }
+
                 convertedProduct.updatedAt = convertedProduct.updatedAt.toDate()
                 return convertedProduct
             })
@@ -97,7 +110,7 @@ export const useAdminProductStore = defineStore('product-admin', {
         },
         async addProduct(productData) {
             try {
-                productData.remainQuantity = productData.quantity
+                productData.remainQuantity = parseInt(productData.quantity)
                 productData.updatedAt = new Date()
                 const productCol = collection(db, "products")
                 await addDoc(productCol, productData)
@@ -111,8 +124,8 @@ export const useAdminProductStore = defineStore('product-admin', {
                 updateProduct.name = productData.name
                 updateProduct.imageUrl = productData.imageUrl
                 updateProduct.price = productData.price
-                updateProduct.quantity = productData.quantity
-                updateProduct.remainQuantity = productData.quantity
+                updateProduct.quantity = parseInt(productData.quantity)
+                updateProduct.remainQuantity = parseInt(productData.quantity)
                 updateProduct.status = productData.status
                 updateProduct.updatedAt = new Date()
 

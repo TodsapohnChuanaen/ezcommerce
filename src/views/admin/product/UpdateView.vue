@@ -45,7 +45,7 @@ const router = useRouter()
 const route = useRoute()
 
 const productIndex = ref()
-const mode = ref('add')
+const mode = ref('Add')
 
 onMounted(async () => {
     if (route.params.id) {
