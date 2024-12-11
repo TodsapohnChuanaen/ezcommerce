@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 
-import {GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import {GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '@/firebase';
 //getDoc ใช้สําหรับดึงข้อมูลอันเดียว getDocs ดึงข้อมูลทั้งหมด
-import {doc,getDoc,setDoc} from 'firebase/firestore'
+import {doc,getDoc,setDoc,updateDoc} from 'firebase/firestore'
 
 const provider = new GoogleAuthProvider();
 
@@ -21,6 +21,7 @@ export const useAccountStore = defineStore('account', {
                     // console.log('user',user)
                     if (user) {
                         this.user = user
+
                         const uid = user.uid
 
                         const docRef = doc(db, "users", uid);
@@ -39,17 +40,14 @@ export const useAccountStore = defineStore('account', {
                             this.profile = newUser
                         }
 
-                        //for testing purpose
-                        // if(user.email == 'admin@test.com'){
-                        //     this.isAdmin = true
-                        // }
-
                         // console.log('profile',this.profile)
                         if(this.profile.role == 'admin' ||
                             this.profile.role == 'moderator'
 
                         ){
                             this.isAdmin = true
+
+                            this.profile.email = user.email
                         }
 
                         //สำหรับสร้าง user = สร้าง data เข้า collection user ทันที
@@ -60,6 +58,18 @@ export const useAccountStore = defineStore('account', {
                     }
                 })
             })
+        },
+        async updateProfile(userData) {
+            try{
+                const updateUserData ={
+                    fullname: userData.fullname,
+                    profileImageUrl: userData.profileImageUrl
+                }
+                const userRef = doc(db, `users/${this.user.uid}`)
+                await updateDoc(userRef, updateUserData)
+            }catch(error){
+                console.log('error',error)
+            }
         },
         async signInWithGoogle() {
           try{

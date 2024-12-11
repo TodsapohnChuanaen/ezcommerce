@@ -43,7 +43,7 @@
                 <div v-else class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
-                            <img alt="Tailwind CSS Navbar component" src="@/assets/pic/cuteCat.jpg" />
+                            <img alt="Tailwind CSS Navbar component" :src="accountStore.profile.profileImageUrl || '@/assets/pic/cuteCat.jpg'" />
                         </div>
                     </div>
                     <ul tabindex="0"

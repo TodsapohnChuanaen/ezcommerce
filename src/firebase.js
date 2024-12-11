@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app'
 //import connectFirestoreEmulator เพื่อใช้ emulator ของ firestore
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const AUTH_DOMAIN  = import.meta.env.VITE_AUTH_DOMAIN
@@ -35,14 +36,11 @@ connectFirestoreEmulator(db, '127.0.0.1', 8080);
 const auth = getAuth(app)
 connectAuthEmulator(auth, 'http://127.0.0.1:9099')
 
+const storage = getStorage()
+connectStorageEmulator(storage, '127.0.0.1', 9199)
+
 export{
     db,
-    auth
+    auth,
+    storage
 } 
-
-//test on server
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app)
-// export{
-//   db
-// }
