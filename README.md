@@ -80,5 +80,10 @@ and views-admin-product  ,  component-Pagination.vue
 views-admin-product
 in updateProduct function
 when add product button need to add loading scren and prevent user to do anything when waiting for loading 
+
+helper function
+
+การ convert image ในกรณีที่ user upload ภาพเดิม ซ้ำๆ แต่เป็นชื่อใหม่
+เพื่อไม่ให้เกิดการใช้งาน storage มากเกินไป อาจจะแก้ โดยการแปลงชื่อภาพเป็น uid ของ user และทำการแปลงเป็น type ตามที่เราต้องการ และอาจจะอนุญาตให้ upload มาแค่ png หรือ jpg หรือเมื่อ user upload มาเป็น format ไหน ให้แปลง format ไปเป็นตามที่เราต้องการ 
 ```
 

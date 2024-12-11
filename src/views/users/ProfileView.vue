@@ -6,7 +6,6 @@
                 <div class="flex flex-col items-center">
                     <div class="avatar">
                         <div class="w-ful rounded-full">
-                            <!-- <img src="@/assets/pic/cuteCat.jpg"> -->
                             <img :src="profileImageUrl">
                         </div>
                     </div>

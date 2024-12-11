@@ -8,12 +8,16 @@
                     <div class="label">
                         <span class="label-text">{{ form.name }}</span>
                     </div>
-                    <input v-if="form.type === 'text'" v-model="productData[form.field]" 
-                        type="text"
+                    <input v-if="form.type === 'text'" v-model="productData[form.field]" type="text"
                         placeholder="Type here" class="input input-bordered w-full" />
-                    <input v-else v-model="productData[form.field]"
-                        type="number"
-                        class="input input-bordered w-full" />
+                    <input v-else-if="form.type === 'number'" v-model="productData[form.field]" type="number" class="input input-bordered w-full" />
+                    
+                    <div v-else class="avatar">
+                        <div class="w-24 rounded-full">
+                            <img :src="productData[form.field]">
+                        </div>
+                        <input type="file" @change="handleFileUpload">
+                    </div>
                 </label>
             </div>
             <div class="divider"></div>
@@ -44,6 +48,9 @@ import { useRouter, useRoute, RouterLink } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminProductStore } from '@/store/admin/products'
 
+import {storage} from '@/firebase'
+import {ref as storageRef, uploadBytes, getDownloadURL} from 'firebase/storage'
+
 const adminProductStore = useAdminProductStore()
 const router = useRouter()
 const route = useRoute()
@@ -58,8 +65,8 @@ onMounted(async () => {
 
         const selectedProduct = await adminProductStore.getProduct(productIndex.value)
 
-        productData.name = selectedProduct.name
         productData.imageUrl = selectedProduct.imageUrl
+        productData.name = selectedProduct.name
         productData.price = selectedProduct.price
         productData.quantity = selectedProduct.quantity
         productData.about = selectedProduct.about
@@ -70,14 +77,16 @@ onMounted(async () => {
 
 const formData = [
     {
-        name: 'Name',
-        field: 'name',
-        type: 'text'
+       
+
+        name: 'Image',
+        field: 'imageUrl',
+        type: 'upload-image'
 
     },
     {
-        name: 'Image',
-        field: 'imageUrl',
+        name: 'Name',
+        field: 'name',
         type: 'text'
     },
     {
@@ -99,8 +108,8 @@ const formData = [
 
 
 const productData = reactive({
-    name: '',
     imageUrl: '',
+    name: '',
     price: 0,
     quantity: 0,
     about: '',
@@ -119,4 +128,28 @@ const updateProduct = async () => {
         console.log('error', error)
     }
 }
+
+const handleFileUpload = async (event) => {
+    const file = event.target.files[0]
+
+    let mainPath = ''
+
+    if(productIndex.value !== -1){
+        mainPath = productIndex.value + '-'
+    }
+
+    if (file) {
+        //ระบุ path ไปที่เราต้องการอัพโหลด
+        const uploadRef = storageRef(storage,
+            `products/${mainPath}${file.name}`)
+
+        //หลังจาก upload เสร็จ เราจะบอกว่า upload ไปที่ไหน พร้อมกับบอกว่า file ไหน ด้วยคำสั่ง uploadBytes
+        const snapshot = await uploadBytes(uploadRef, file)
+        //เราจะได้ผลลัพธ์จากการ upload คือ downloadUrl
+        const downloadUrl = await getDownloadURL(snapshot.ref)
+        //นำ downloadUrl แทนเข้าไปใน profileImageUrl
+        productData.imageUrl = downloadUrl
+    }
+}
+
 </script>
