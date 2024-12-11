@@ -3,6 +3,14 @@
         <div class="shadow-3xl p-8 mt-4">
             <div class="text-3xl font-bold">{{ mode }}</div>
             <div class="divider"></div>
+
+            <div class="avatar">
+                <div class="w-24 rounded-full">
+                    <img :src="productData.imageUrl">
+                </div>
+                <input type="file" @change="handleFileUpload">
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <label v-for="form in formData" class="form-control w-full" v-bind:key="form.id">
                     <div class="label">
@@ -10,14 +18,8 @@
                     </div>
                     <input v-if="form.type === 'text'" v-model="productData[form.field]" type="text"
                         placeholder="Type here" class="input input-bordered w-full" />
-                    <input v-else-if="form.type === 'number'" v-model="productData[form.field]" type="number" class="input input-bordered w-full" />
-                    
-                    <div v-else class="avatar">
-                        <div class="w-24 rounded-full">
-                            <img :src="productData[form.field]">
-                        </div>
-                        <input type="file" @change="handleFileUpload">
-                    </div>
+                    <input v-else v-model="productData[form.field]" type="number"
+                        class="input input-bordered w-full" />
                 </label>
             </div>
             <div class="divider"></div>
@@ -48,8 +50,8 @@ import { useRouter, useRoute, RouterLink } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminProductStore } from '@/store/admin/products'
 
-import {storage} from '@/firebase'
-import {ref as storageRef, uploadBytes, getDownloadURL} from 'firebase/storage'
+import { storage } from '@/firebase'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const adminProductStore = useAdminProductStore()
 const router = useRouter()
@@ -67,9 +69,9 @@ onMounted(async () => {
 
         productData.imageUrl = selectedProduct.imageUrl
         productData.name = selectedProduct.name
+        productData.about = selectedProduct.about
         productData.price = selectedProduct.price
         productData.quantity = selectedProduct.quantity
-        productData.about = selectedProduct.about
         productData.status = selectedProduct.status
     }
 })
@@ -77,16 +79,13 @@ onMounted(async () => {
 
 const formData = [
     {
-       
-
-        name: 'Image',
-        field: 'imageUrl',
-        type: 'upload-image'
-
-    },
-    {
         name: 'Name',
         field: 'name',
+        type: 'text'
+    },
+    {
+        name: 'About',
+        field: 'about',
         type: 'text'
     },
     {
@@ -98,11 +97,6 @@ const formData = [
         name: 'Quantity',
         field: 'quantity',
         type: 'number'
-    },
-    {
-        name: 'About',
-        field: 'about',
-        type: 'text'
     }
 ]
 
@@ -110,9 +104,9 @@ const formData = [
 const productData = reactive({
     imageUrl: '',
     name: '',
+    about: '',
     price: 0,
     quantity: 0,
-    about: '',
     status: ''
 })
 
@@ -134,7 +128,7 @@ const handleFileUpload = async (event) => {
 
     let mainPath = ''
 
-    if(productIndex.value !== -1){
+    if (productIndex.value !== -1) {
         mainPath = productIndex.value + '-'
     }
 

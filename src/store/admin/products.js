@@ -121,8 +121,9 @@ export const useAdminProductStore = defineStore('product-admin', {
         async updateProduct(productId, productData) {
             try {
                 const updateProduct = {}
-                updateProduct.name = productData.name
                 updateProduct.imageUrl = productData.imageUrl
+                updateProduct.name = productData.name
+                updateProduct.about = productData.about
                 updateProduct.price = productData.price
                 updateProduct.quantity = parseInt(productData.quantity)
                 updateProduct.remainQuantity = parseInt(productData.quantity)
