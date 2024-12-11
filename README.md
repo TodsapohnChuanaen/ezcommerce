@@ -74,3 +74,11 @@ still have bug about pagination in  http://localhost:5173/admin/products
 need to look at store-admin-products
 and views-admin-product  ,  component-Pagination.vue
 ```
+
+### Need improve
+```sh
+views-admin-product
+in updateProduct function
+when add product button need to add loading scren and prevent user to do anything when waiting for loading 
+```
+

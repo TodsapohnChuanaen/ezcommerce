@@ -108,9 +108,9 @@ export const useAdminProductStore = defineStore('product-admin', {
                 console.log('error', error)
             }
         },
-        async addProduct(productData) {
+        async addProduct(productData) { 
             try {
-                productData.remainQuantity = parseInt(productData.quantity)
+                productData.remainQuantity = productData.quantity
                 productData.updatedAt = new Date()
                 const productCol = collection(db, "products")
                 await addDoc(productCol, productData)

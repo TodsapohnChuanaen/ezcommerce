@@ -8,8 +8,12 @@
                     <div class="label">
                         <span class="label-text">{{ form.name }}</span>
                     </div>
-                    <input type="text" placeholder="Type here" class="input input-bordered w-full"
-                        v-model="productData[form.field]" />
+                    <input v-if="form.type === 'text'" v-model="productData[form.field]" 
+                        type="text"
+                        placeholder="Type here" class="input input-bordered w-full" />
+                    <input v-else v-model="productData[form.field]"
+                        type="number"
+                        class="input input-bordered w-full" />
                 </label>
             </div>
             <div class="divider"></div>
@@ -63,28 +67,36 @@ onMounted(async () => {
     }
 })
 
+
 const formData = [
     {
         name: 'Name',
-        field: 'name'
+        field: 'name',
+        type: 'text'
+
     },
     {
         name: 'Image',
         field: 'imageUrl',
+        type: 'text'
     },
     {
         name: 'Price',
-        field: 'price'
+        field: 'price',
+        type: 'number'
     },
     {
         name: 'Quantity',
-        field: 'quantity'
+        field: 'quantity',
+        type: 'number'
     },
     {
         name: 'About',
-        field: 'about'
+        field: 'about',
+        type: 'text'
     }
 ]
+
 
 const productData = reactive({
     name: '',
