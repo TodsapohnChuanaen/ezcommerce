@@ -87,3 +87,8 @@ helper function
 เพื่อไม่ให้เกิดการใช้งาน storage มากเกินไป อาจจะแก้ โดยการแปลงชื่อภาพเป็น uid ของ user และทำการแปลงเป็น type ตามที่เราต้องการ และอาจจะอนุญาตให้ upload มาแค่ png หรือ jpg หรือเมื่อ user upload มาเป็น format ไหน ให้แปลง format ไปเป็นตามที่เราต้องการ 
 ```
 
+### About Firebase
+```sh
+- ถ้าการ Realtime ด้วยข้อมูลขนาดไม่ใหญ่ แต่ต้องมีการอ่านบ่อยๆ เขียนบ่อยๆ = Realtime DB จะ save cost ได้มากกว่า (Firestore จะ save cost ได้แค่ขา read แต่ write ยังคิดเหมือนเดิม)
+- ถ้า Realtime ข้อมูลขนาดใหญ่ และมี query ที่ complex (เช่นการ search) = Firestore + Offline cache 
+```

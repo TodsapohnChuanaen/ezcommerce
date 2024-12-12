@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div><b>In stock</b></div>
+                            <!-- <div><b>In stock</b></div> -->
                         </div>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ import AdminOrderList from '@/views/admin/order/ListView.vue'
 import AdminOrderDetail from '@/views/admin/order/DetailView.vue'
 
 import {useAccountStore} from '@/store/account'
+import {useCartStore} from '@/store/users/cart'
 
 
 const router = createRouter({
@@ -111,6 +112,12 @@ router.beforeEach(async(to, from, next) => {
   // console.log('from',from)
   const accountStore = useAccountStore()
   await accountStore.checkAuth()
+
+  //เหตุผลที่นำ await userCartStore.loadCart() มาไว้ในนี้เพื่อให้ state ทำงานต่อเนื่องกัน
+  //state ของ beforeEach จะถูกเรียกใช้ก่อนเข้า state จริง
+  //เพื่อเป็นการ make sure ว่าเราได้ข้อมูล user มาจริง
+  const userCartStore = useCartStore()
+  await userCartStore.loadCart()
 
   //guard navigation
   //check if user is admin and if not redirect to home

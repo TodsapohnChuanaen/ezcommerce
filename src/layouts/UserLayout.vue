@@ -60,6 +60,12 @@
             </div>
         </div>
 
+        <!-- for banner to display(we can control in firebase realtime database console) -->
+        <div v-if="eventStore.banner.display">
+            <a :href="eventStore.banner.link" class="banner" target="_blank">
+                <img class="w-full" :src="eventStore.banner.imageUrl">
+            </a>
+        </div>
         <!-- main content -->
         <slot></slot>
 
@@ -77,12 +83,18 @@ import {RouterLink,useRouter} from 'vue-router'
 
 import {useCartStore} from '@/store/users/cart'
 import {useAccountStore} from '@/store/account'
+import {useEventStore} from '@/store/event'
 
 
 const cartStore = useCartStore()
 const accountStore = useAccountStore()
+const eventStore = useEventStore()
 
 const router = useRouter()
+
+onMounted(() => {
+    eventStore.loadBanner()
+})
 
 //for local test
 // const isLoggedIn = ref(false)
@@ -119,6 +131,7 @@ const login = async () =>{
     
     try{
         await accountStore.signInWithGoogle()
+        location.reload()
     }catch(error){
         console.log('error',error)
     }

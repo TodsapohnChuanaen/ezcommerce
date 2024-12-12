@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
+import {getDatabase, connectDatabaseEmulator} from 'firebase/database'
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const AUTH_DOMAIN  = import.meta.env.VITE_AUTH_DOMAIN
@@ -39,8 +40,12 @@ connectAuthEmulator(auth, 'http://127.0.0.1:9099')
 const storage = getStorage()
 connectStorageEmulator(storage, '127.0.0.1', 9199)
 
+const realtimeDB = getDatabase(app)
+connectDatabaseEmulator(realtimeDB, '127.0.0.1', 9000)
+
 export{
     db,
     auth,
-    storage
+    storage,
+    realtimeDB
 } 

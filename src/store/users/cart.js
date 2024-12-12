@@ -5,7 +5,10 @@ import {
   doc, writeBatch
 } from 'firebase/firestore'
 
-import { db } from '@/firebase'
+import { ref, onValue, set } from 'firebase/database'
+import { db, realtimeDB } from '@/firebase'
+
+import { useAccountStore } from '@/store/account'
 
 export const useCartStore = defineStore("cart", {
   state: () => ({
@@ -25,16 +28,38 @@ export const useCartStore = defineStore("cart", {
         // โดยเรื่มจาก 0(ในกรณีนี้)
         return total + ((item.price * item.quantity))  //เอาค่าที่วน loop แต่ละครั้งมาเก็บไว้ที่ total แล้ว return
       }, 0)
+    },
+    user(state) {
+      const accountStore = useAccountStore()
+      return accountStore.user
+    },
+    cartRef(state) {
+      return ref(realtimeDB, `carts/${this.user.uid}`)
     }
   },
   actions: {
-    loadCart() {
-      const cartData = localStorage.getItem('cart-data')
-      if (cartData) {
-        this.items = JSON.parse(cartData)
+    async loadCart() {
+      // console.log('loadCart user',this.user)
+
+      //ถ้า user ยังไม่ได้ log in จะเก็บข้อมูลตะกร้าสินค้าไว้ใน localStorage
+      //แต่ถ้า login จะเก็บไว้ใน firebase user.id
+      if (this.user.uid) {
+        onValue(this.cartRef, (snapshot) => {
+          const data = snapshot.val()
+          if (data) {
+            this.items = data
+          }
+        }, (err) => {
+          console.log('error', err)
+        })
+      } else {
+        const cartData = localStorage.getItem('cart-data')
+        if (cartData) {
+          this.items = JSON.parse(cartData)
+        }
       }
     },
-    addToCart(productData) {
+    async addToCart(productData) {
       //หา index ก่อนว่ามี product นี้อยู่ใน cart หรือยัง
       const findProductIndex = this.items.findIndex(item => {
         return item.name === productData.name
@@ -48,15 +73,20 @@ export const useCartStore = defineStore("cart", {
         const currentItem = this.items[findProductIndex]
         this.updateQuantity(findProductIndex, currentItem.quantity + 1)
       }
-
+      //ใน add, remove, update ใช้ set เนื่องจากในนี้ข้อมูลยังไม่ใหญ่มาก
+      //แต่ถ้าข้อมูลขนาดใหญ่ขึ้น อาจจะแยกกรณีไปใช้คำสั่ง update,delete ได้ตาม doccument
+      await set(this.cartRef, this.items)
+      //ในกรณีนี้เมื่อ user logout ออก ตะกร้าสินค้าจะยังคงอยู่โดยเก็บใน localStorage(ขึ้นอยู่กับ requirement ของเรา) 
       localStorage.setItem('cart-data', JSON.stringify(this.items))
     },
-    updateQuantity(index, quantity) {
+    async updateQuantity(index, quantity) {
       this.items[index].quantity = quantity
+      await set(this.cartRef, this.items)
       localStorage.setItem('cart-data', JSON.stringify(this.items))
     },
-    removeItemInCart(index) {
+    async removeItemInCart(index) {
       this.items.splice(index, 1)
+      await set(this.cartRef, this.items)
       localStorage.setItem('cart-data', JSON.stringify(this.items))
     },
     async placeOrder(userData) {

@@ -41,12 +41,10 @@ export const useAccountStore = defineStore('account', {
                         }
 
                         // console.log('profile',this.profile)
-                        if(this.profile.role == 'admin' ||
-                            this.profile.role == 'moderator'
-
-                        ){
+                        if(this.profile.role == 'admin' || this.profile.role == 'moderator'){
                             this.isAdmin = true
-
+                            this.profile.email = user.email
+                        }else{
                             this.profile.email = user.email
                         }
 
