@@ -6,7 +6,7 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="avatar justify-end">
-                    <div class="w-ful rounded-full">
+                    <div class="rounded-full">
                         <img :src="productData.imageUrl">
                     </div>
                 </div>
@@ -59,6 +59,8 @@ import { useAdminProductStore } from '@/store/admin/products'
 import { storage } from '@/firebase'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
+import defaultImageUrl from '@/assets/pic/photo.jpg'
+
 const adminProductStore = useAdminProductStore()
 const router = useRouter()
 const route = useRoute()
@@ -66,19 +68,24 @@ const route = useRoute()
 const productIndex = ref()
 const mode = ref('Add')
 
+// const productImageUrl = ref()
+
 onMounted(async () => {
     if (route.params.id) {
         productIndex.value = route.params.id
-        mode.value = 'edit'
+        mode.value = 'Edit'
 
         const selectedProduct = await adminProductStore.getProduct(productIndex.value)
 
+        // productImageUrl.value = (selectedProduct.imageUrl || defaultImageUrl)
         productData.imageUrl = selectedProduct.imageUrl
         productData.name = selectedProduct.name
         productData.about = selectedProduct.about
         productData.price = selectedProduct.price
         productData.quantity = selectedProduct.quantity
         productData.status = selectedProduct.status
+    }else{
+        productData.imageUrl = defaultImageUrl
     }
 })
 
@@ -116,12 +123,18 @@ const productData = reactive({
     status: ''
 })
 
+
+
 const updateProduct = async () => {
     try {
-        if (mode.value === 'edit') {
-            await adminProductStore.updateProduct(productIndex.value, productData)
+        if (mode.value === 'Edit') {
+            await adminProductStore.updateProduct(productIndex.value, productData).then(() => {
+                alert('Product Updated')
+            })      
         } else {
-            await adminProductStore.addProduct(productData)
+            await adminProductStore.addProduct(productData).then(() => {
+                alert('Product Added')
+            })
         }
         router.push({ name: 'admin-products-list' })
     } catch (error) {
@@ -153,3 +166,10 @@ const handleFileUpload = async (event) => {
 }
 
 </script>
+
+<style scoped>
+    .rounded-full{
+        width: 250px;
+        height: 250px;
+    }
+</style>

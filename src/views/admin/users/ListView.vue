@@ -4,7 +4,7 @@
             <div class="text-3xl font-bold">Users</div>
         </div>
         <Table :headers="['Name', 'Role', 'Status', 'Updated At', 'Action']">
-            <tr v-for="(user,index) in adminUserStore.list" v-bind:key="user.id">
+            <tr class="hover" v-for="(user,index) in adminUserStore.list" v-bind:key="user.id">
                 <td class=" text-white font-bold">{{ user.fullname }}</td>
                 <td>{{ user.role}}</td>
                 <td><div class="badge"
@@ -14,7 +14,7 @@
                 </td>
                 <td>{{ user.updatedAt }}</td>
                 <td>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 ">
                     <RouterLink :to="{ name: 'admin-users-update', params: { id: user.uid } }" 
                     class="btn btn-ghost btn-circle">
                         <Edit></Edit>

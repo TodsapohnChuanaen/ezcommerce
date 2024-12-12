@@ -4,7 +4,7 @@
             <div class="text-3xl font-bold">Order List</div>
         </div>
         <Table :headers="['Customer Name', 'Price', 'Status', 'Updated At',]">
-            <tr v-for="(order, index) in adminOrderStore.list" v-bind:key="order.id">
+            <tr class="hover" v-for="(order, index) in adminOrderStore.list" v-bind:key="order.id">
                 <td>{{ order.customerName }}</td>
                 <td>{{ order.totalPrice }}</td>
                 <td>{{ order.status }}</td>
