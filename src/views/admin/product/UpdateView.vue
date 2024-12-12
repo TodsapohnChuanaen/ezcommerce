@@ -4,12 +4,19 @@
             <div class="text-3xl font-bold">{{ mode }}</div>
             <div class="divider"></div>
 
-            <div class="avatar">
-                <div class="w-24 rounded-full">
-                    <img :src="productData.imageUrl">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="avatar justify-end">
+                    <div class="w-ful rounded-full">
+                        <img :src="productData.imageUrl">
+                    </div>
                 </div>
-                <input type="file" @change="handleFileUpload">
+                
+                <div class="avatar items-center">
+                <input type="file" accept="image/*" @change="handleFileUpload">
             </div>
+            </div>
+
+
 
             <div class="grid grid-cols-2 gap-4">
                 <label v-for="form in formData" class="form-control w-full" v-bind:key="form.id">
@@ -18,8 +25,7 @@
                     </div>
                     <input v-if="form.type === 'text'" v-model="productData[form.field]" type="text"
                         placeholder="Type here" class="input input-bordered w-full" />
-                    <input v-else v-model="productData[form.field]" type="number"
-                        class="input input-bordered w-full" />
+                    <input v-else v-model="productData[form.field]" type="number" class="input input-bordered w-full" />
                 </label>
             </div>
             <div class="divider"></div>
