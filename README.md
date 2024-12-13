@@ -20,7 +20,9 @@ npx tailwindcss init
 npm i -D daisyui@latest
 # APEXCHARTS  
 npm install --save apexcharts
-npm install --save vue3-apexcharts  
+npm install --save vue3-apexcharts
+#for http request
+npm install express --save  
 ```
 ### Install firebase for backend
 ```sh
@@ -41,7 +43,12 @@ npm install firebase
 
 create file firebase.js in src folder for firebase config.
 by go to project Overview and choose add app
+
+#check if project has firebase-admin 
+in folder function-package.json > main dependencies like this "firebase-admin": "^12.1.0"
+if not npm install firebase-admin
 ```
+
 
 ### Compile and Hot-Reload for Development
 

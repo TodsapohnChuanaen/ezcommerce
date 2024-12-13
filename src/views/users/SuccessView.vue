@@ -26,7 +26,8 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <div v-for="product in orderData.products" class="grid grid-cols-4 gap-2 mb-4 items-center" v-bind:key="product.id">
+            <div v-for="product in orderData.products" class="grid grid-cols-4 gap-2 mb-4 items-center"
+                v-bind:key="product.id">
                 <div>
                     <img class="w-full" :src="product.imageUrl">
                 </div>
@@ -44,14 +45,14 @@
             <div class="flex justify-between mt-4">
                 <div class="font-bold">Shipping cost</div>
                 <div>0</div>
-            </div>    
+            </div>
             <div class="divider"></div>
             <div class="flex justify-between">
                 <div class="font-bold">Total price</div>
                 <div>{{ orderData.totalPrice }}</div>
             </div>
             <div class="divider"></div>
-                <div class="flex justify-center">Thank for purchased</div>         
+            <div class="flex justify-center">Thank for purchased</div>
         </div>
     </UserLayout>
 </template>
@@ -59,15 +60,21 @@
 import UserLayout from '@/layouts/UserLayout.vue'
 import { useCartStore } from '@/store/users/cart'
 import { ref, onMounted } from 'vue'
+import {useRoute} from 'vue-router'
 
+const route = useRoute()
 const cartStore = useCartStore()
 const orderData = ref({})
 
-onMounted(() => {
-    cartStore.loadCheckoutData()
-    // console.log(cartStore.checkout)
-    if (cartStore.checkout.orderNumber) {
-        orderData.value = cartStore.checkout
+
+onMounted(async () => {
+    const orderId = route.query.order_id
+    if(orderId){
+        try{
+            orderData.value = await cartStore.loadCheckoutData(orderId)
+        }catch(error){
+            console.log(error)
+        }
     }
 })
 </script>

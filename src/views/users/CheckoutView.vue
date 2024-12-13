@@ -15,7 +15,7 @@
             <section class="flex-auto w-32 bg-neutral px-2">
                 <div v-for="item in cartStore.items" class="flex bg-neutral-800 m-8 py-4" v-bind:key="item.id">
                     <div class="flex-1">
-                        <img class="w-full p-8" :src="item.imageUrl" />
+                        <img class="p-8" :src="item.imageUrl" />
                     </div>
                     <div class="flex-1">
                         <div class="flex flex-col justify-between h-full">
@@ -85,9 +85,17 @@ const userFormData = reactive({
     note: ''
 })
 
-const payment = () => {
+const payment = async () => {
     // console.log(userFormData)
-    cartStore.placeOrder(userFormData)
+    const responseData = await cartStore.placeOrder(userFormData)
+    location.href = responseData.redirectUrl
     // router.push({name: 'SuccessView'})
 }
 </script>
+
+<style scoped>
+    img {
+        width: 300px;
+        height: 300px;
+    }
+</style>
