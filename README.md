@@ -52,7 +52,11 @@ by go to project Overview and choose add app
 in folder function-package.json > main dependencies like this "firebase-admin": "^12.1.0"
 if not npm install firebase-admin
 ```
-
+### run on real server
+```sh
+    cd functions 
+        npm run serve
+```
 
 ### Compile and Hot-Reload for Development
 
@@ -70,6 +74,7 @@ npm run build
 ```sh
 https://download.ngrok.com/linux?tab=install
 follow step from doc
+ทุกครั้งที่ใช้ emulator และใช้ ngrok อย่าลืมนำ https forwarding ของ ngrok ไปใส่ใน omise setting webhook
 open cmd--- ex.  ngrok http http://localhost:5001  (5001 is Functions emulator port)
 ```
 
@@ -109,10 +114,21 @@ helper function
     look at SuccessView.vue in onMouted function
     on try catch(error)
     and in store - users - cart.js  loadCheckoutData function
+
+# CI/CD
+    search github ci/cd firebase hosting
+
+# Parameter values and expressions
 ```
 
 ### About Firebase
 ```sh
 - ถ้าการ Realtime ด้วยข้อมูลขนาดไม่ใหญ่ แต่ต้องมีการอ่านบ่อยๆ เขียนบ่อยๆ = Realtime DB จะ save cost ได้มากกว่า (Firestore จะ save cost ได้แค่ขา read แต่ write ยังคิดเหมือนเดิม)
 - ถ้า Realtime ข้อมูลขนาดใหญ่ และมี query ที่ complex (เช่นการ search) = Firestore + Offline cache 
+```
+
+### Deploy 
+```sh
+npm run build จะได้ file dist มา จากไปที่ firebase.json ตรง hosting - public ให้ใส่ dist แทน public
+firebase deploy --only hosting
 ```

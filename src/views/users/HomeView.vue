@@ -3,7 +3,7 @@
         <div class="hero bg-base-200 h-96">
             <div class="hero-content text-center">
                 <div class="max-w-md">
-                    <h1 class="text-5xl font-bold">Welcome Idiot</h1>
+                    <h1 class="text-5xl font-bold">Welcome</h1>
                     <p class="py-6">
                         Chills Bro
                     </p>

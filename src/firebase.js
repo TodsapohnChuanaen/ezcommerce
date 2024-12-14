@@ -31,17 +31,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app)
-//use emulator, default emulator port is 8080  
-connectFirestoreEmulator(db, '127.0.0.1', 8080);
-
 const auth = getAuth(app)
-connectAuthEmulator(auth, 'http://127.0.0.1:9099')
-
 const storage = getStorage()
-connectStorageEmulator(storage, '127.0.0.1', 9199)
-
 const realtimeDB = getDatabase(app)
-connectDatabaseEmulator(realtimeDB, '127.0.0.1', 9000)
+
+
+//ต่อไปยัง production
+// if(false && import.meta.env.DEV){
+//   connectDatabaseEmulator(realtimeDB, '127.0.0.1', 9000)
+//   connectFirestoreEmulator(db, '127.0.0.1', 8080);
+//   connectStorageEmulator(storage, '127.0.0.1', 9199)
+//   connectAuthEmulator(auth, 'http://127.0.0.1:9099')
+// }
+
+//ต่อไปยัง development
+if(import.meta.env.DEV){
+  connectDatabaseEmulator(realtimeDB, '127.0.0.1', 9000)
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+  connectStorageEmulator(storage, '127.0.0.1', 9199)
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099')
+}
 
 export{
     db,

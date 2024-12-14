@@ -159,6 +159,47 @@ app.post('/webhook', async (req, res) => {
   
 })
 
+app.get('/test',async (req, res) => {
+  try{
+    const userRef = db.collection('users')
+    const userSnapshot = await userRef.get()
+    const users = userSnapshot.docs.map(doc => doc.data())
+    res.json({
+      users
+    })
+  }catch(error){
+    console.log('error',error)
+    res.status(400).json({
+      message: error.message
+    })
+  }
+})
+
+app.get('/set-admin', async (req, res) => {
+  try {
+    const idToken = req.headers.authorization
+    let userUid = ''
+
+    console.log('idToken', idToken)
+    if (idToken) {
+      // ทำการ decodedToken ออกมา
+      const decodedToken = await auth.verifyIdToken(idToken)
+      userUid = decodedToken.uid
+      console.log('userUid', userUid)
+      // add for set customClaim in Firebase Authentication
+      await auth.setCustomUserClaims(userUid, { isAdmin: true })
+    }
+
+    res.json({
+      message: `${userUid} is admin right now!`
+    })
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    })
+  }
+})
+
 
 exports.api = onRequest(app);
 
