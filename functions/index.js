@@ -1,8 +1,11 @@
 const {onRequest} = require("firebase-functions/v2/https");
+const {onDocumentWritten} = require('firebase-functions/v2/firestore')
+
 const express = require("express");
 const app = express();
 
-const {db,auth} = require("./firebaseConfig.js")
+
+const {db,auth, realtimeDB} = require("./firebaseConfig.js")
 // const logger = require("firebase-functions/logger");
 
 // console.log(process.env.OMISE_SECRET_KEY)
@@ -153,55 +156,29 @@ app.post('/webhook', async (req, res) => {
   }catch(error){
     console.log('eror',error)
   }
-
-  
-
-  // res.json({message: 'hook ok'})
-
-  // try{
-  //   if(req.body.type === 'charge.complete'){
-  //     const webhookData = req.body.data
-  //     const orderId = webhookData.metadata.orderId
-  //     const chargeId = webhookData.id
-  //     const statusOrder = webhookData.status
-  
-  //     const orderRef = db.collection('orders').doc(orderId)
-  //     const orderSnapshot = await orderRef.get()
-  //     const orderData = orderSnapshot.data()
-  
-  //     //wrong order
-  //     if(orderData.chargeId !== chargeId){
-  //       throw new Error('chargeId not match')
-  //     }
-
-     
-
-  //     if(orderData.status === 'pending'){
-  //       await orderRef.update({ status: statusOrder })
-
-  //       if(statusOrder !== 'successful'){
-  //         //คืน stock กลับ
-  //         db.runTransaction(async (transaction) => {
-  //           for (const product of orderData.products) {
-  //             const productRef = db.collection('products').doc(product.productId)
-  //             const productSnapshot = await productRef.get()  
-  //             const productData = productSnapshot.data()
-  //             transaction.update(productRef, {
-  //               remainQuantity: productData.remainQuantity + product.quantity
-  //             })
-  //           }
-  //         })
-  //       }
-  //     }
-  //   }
-  // }catch(error){
-  //   console.log('error',error)
-  // }
   
 })
 
 
 exports.api = onRequest(app);
+
+//for cloud firestore trigger
+//เมื่อ order เข้ามา (written) จะเพิ่มเข้าไปใน realtime database ตรง stats ที่เราได้ทำการสร้างไว้
+//เมื่อ order มีการเปลี่ยนแปลง จะโชว์ ไปที่หน้า dashboard บอกว่ามี order อะไรบ้าง
+exports.updateOrder = onDocumentWritten('orders/{orderId}', async (event) => {
+  const oldData = event.data.before.data()
+  const newData = event.data.after.data()
+
+  const orderStatRef = realtimeDB.ref('stats/totalAmount')
+
+  if(newData.status === 'successful' && 
+    oldData.status === 'pending'){
+    await orderStatRef.transaction((currentValue) => {
+      return currentValue + newData.totalPrice
+    })
+  }
+});
+
 
 
 

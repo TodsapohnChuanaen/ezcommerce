@@ -11,7 +11,19 @@
                     </svg>
                 </div>
                 <div class="stat-title">Orders</div>
-                <div class="stat-value">31K</div>
+                <div class="stat-value">{{ dashboardStore.stats.orders }}</div>
+                <!-- <div class="stat-desc">Jan 1st - Feb 1st</div> -->
+            </div>
+            <div class="stat">
+                <div class="stat-figure text-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block h-8 w-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-title">Total amount</div>
+                <div class="stat-value">{{ dashboardStore.stats.totalAmount }}</div>
                 <!-- <div class="stat-desc">Jan 1st - Feb 1st</div> -->
             </div>
 
@@ -25,7 +37,7 @@
                     </svg>
                 </div>
                 <div class="stat-title">Products</div>
-                <div class="stat-value">4,200</div>
+                <div class="stat-value">{{ dashboardStore.stats.products }}</div>
                 <!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
             </div>
 
@@ -39,7 +51,7 @@
                     </svg>
                 </div>
                 <div class="stat-title">Users</div>
-                <div class="stat-value">1,200</div>
+                <div class="stat-value">{{ dashboardStore.stats.users }}</div>
                 <!-- <div class="stat-desc">↘︎ 90 (14%)</div> -->
             </div>
         </div>
@@ -58,8 +70,12 @@
 </template>
 
 <script setup>
+import {onMounted} from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
+import {useAdminDashboardStore} from '@/store/admin/dashboard'
+
+const dashboardStore = useAdminDashboardStore()
 
 const priceChart = {
     options: {
@@ -117,6 +133,10 @@ const categoryChart = {
     },
     series: [44, 55, 41, 17, 15,]
 }
+
+onMounted( async () => {
+    await dashboardStore.loadDashboard()
+})
 
 
 </script>
