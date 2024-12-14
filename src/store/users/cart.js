@@ -8,6 +8,30 @@ import { db, realtimeDB } from '@/firebase'
 
 import { useAccountStore } from '@/store/account'
 
+//ไม่ต้อง import เพราะเรา import จาก tag cdn ใน inde.html แล้ว
+//เพราะ tag cdn อยู่ tag level บนสุดอยู่แล้ว
+Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY);
+
+// เพื่อ function createSource
+//เนื่องจากใน project นี้ส่วนมากใช้ async await ในรูปแบบของ promise 
+//เพื่อให้โค้ดเป็นไปในทิศทางเดียวกันจึงแปลงจาก callback ใน doc ของ omise เป็น promise
+const createSource = (amount) => {
+  return new Promise((resolve, reject) => {
+    // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
+    //ในที่นี้เลือก rabbit_linepay
+    Omise.createSource('rabbit_linepay', {
+      amount: (amount * 100),  //คูณ 100 เพราะ เป็นหน่วยสตางค์
+      //เช่น ราคา 400 บาท เอาไปคูณ 100 จะได้ 40000
+      currency: 'THB'
+    }, (statusCode, response) => {
+      if (statusCode !== 200) {
+        return reject(response)
+      }
+      resolve(response)
+    })
+  })
+}
+
 export const useCartStore = defineStore("cart", {
   state: () => ({
     items: [],
@@ -101,10 +125,12 @@ export const useCartStore = defineStore("cart", {
           }))
         }
 
-        console.log('orderData', checkoutData)
+        const omiseResponse = await createSource(this.totalPrice)
+
+        console.log('omiseResponse', omiseResponse)
         
         const response = await axios.post('/api/placeorder',{
-          source: 'test_src',  // will add when use omise
+          source: omiseResponse.id,  //omise source token
           checkout: checkoutData
         })
         return response.data
@@ -126,7 +152,7 @@ export const useCartStore = defineStore("cart", {
         orderData.orderNumber = orderSnapshot.id
         return orderData
       }catch(error){
-        console.log('error', error)
+        throw new Error(error.message)
       }
     }
   },

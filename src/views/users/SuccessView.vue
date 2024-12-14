@@ -73,6 +73,8 @@ onMounted(async () => {
         try{
             orderData.value = await cartStore.loadCheckoutData(orderId)
         }catch(error){
+            alert('Order Unsuccessful')
+            location.href = '/'
             console.log(error)
         }
     }

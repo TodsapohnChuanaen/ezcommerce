@@ -49,7 +49,7 @@
     </UserLayout>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { RouterLink,useRouter } from 'vue-router'
 
 import UserLayout from '@/layouts/UserLayout.vue'
@@ -58,6 +58,7 @@ import {useCartStore} from '@/store/users/cart'
 
 const cartStore = useCartStore()
 const router = useRouter()
+
 
 const FormData = [
     {

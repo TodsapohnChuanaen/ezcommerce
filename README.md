@@ -22,7 +22,11 @@ npm i -D daisyui@latest
 npm install --save apexcharts
 npm install --save vue3-apexcharts
 #for http request
-npm install express --save  
+npm install express --save 
+npm i axios 
+
+# opn Omise pay
+npm install omise
 ```
 ### Install firebase for backend
 ```sh
@@ -62,6 +66,13 @@ npm run dev
 npm run build
 ```
 
+### use ngrok to change local path to deeploy on internet
+```sh
+https://download.ngrok.com/linux?tab=install
+follow step from doc
+open cmd--- ex.  ngrok http http://localhost:5001  (5001 is Functions emulator port)
+```
+
 ### Things to look out for when encountering bugs and errors.
 ```sh
 export const useProductStore = defineStore('product-users', {} 
@@ -92,6 +103,12 @@ helper function
 
 การ convert image ในกรณีที่ user upload ภาพเดิม ซ้ำๆ แต่เป็นชื่อใหม่
 เพื่อไม่ให้เกิดการใช้งาน storage มากเกินไป อาจจะแก้ โดยการแปลงชื่อภาพเป็น uid ของ user และทำการแปลงเป็น type ตามที่เราต้องการ และอาจจะอนุญาตให้ upload มาแค่ png หรือ jpg หรือเมื่อ user upload มาเป็น format ไหน ให้แปลง format ไปเป็นตามที่เราต้องการ 
+
+#handle statusOrder !== 'successful' (Order Unsuccessful,fail) in functions folder - index.js
+    แล้วแต่ว่าจะจัดการ case นี้ยังไง
+    look at SuccessView.vue in onMouted function
+    on try catch(error)
+    and in store - users - cart.js  loadCheckoutData function
 ```
 
 ### About Firebase
