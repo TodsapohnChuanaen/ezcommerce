@@ -19,7 +19,6 @@ export const useAdminProductStore = defineStore('product-admin', {
             }
         }
     }),
-
     getters: {
         list(state) {
             return state.docList.map(doc => {

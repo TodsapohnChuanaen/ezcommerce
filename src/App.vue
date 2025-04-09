@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
-import {  RouterView } from 'vue-router'
+import {RouterView} from 'vue-router'
 import {useCartStore} from '@/store/users/cart'
 import {useProductStore} from '@/store/users/products'
 import {useEventStore} from '@/store/event'
